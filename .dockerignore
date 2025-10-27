@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build output
+dist
+dist-ssr
+*.local
+
+# Testing
+coverage
+
+# Environment files (we'll pass these as build args)
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Deployment files
+deploy-podman.sh
+README.md

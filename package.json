@@ -10,8 +10,10 @@
     "build:production": "tsc && vite build --mode production",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docker:build:dev": "docker build -t virtual-scroll-app:dev --build-arg VITE_API_URL=http://localhost:3000 --build-arg VITE_APP_NAME=\"MyApp Dev\" --build-arg VITE_ENV=development .",
+    "docker:build:staging": "docker build -t virtual-scroll-app:staging --build-arg VITE_API_URL=https://staging-api.example.com --build-arg VITE_APP_NAME=\"MyApp Staging\" --build-arg VITE_ENV=staging .",
+    "docker:build:prod": "docker build -t virtual-scroll-app:production --build-arg VITE_API_URL=https://api.example.com --build-arg VITE_APP_NAME=\"MyApp Production\" --build-arg VITE_ENV=production ."
   },
   "dependencies": {
     "react": "^19.1.1",
