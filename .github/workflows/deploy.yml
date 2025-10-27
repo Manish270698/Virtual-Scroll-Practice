@@ -1,0 +1,49 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/apps/virtual-scroll-app
+
+            # Pull latest code
+            git pull origin main
+
+            # Stop current container
+            systemctl --user stop virtual-scroll-app.service
+
+            # Remove old container and image
+            podman rm -f virtual-scroll-app || true
+            podman rmi localhost/virtual-scroll-app:production || true
+
+            # Build new image
+            podman build \
+              -t virtual-scroll-app:production \
+              --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }} \
+              --build-arg VITE_APP_NAME=${{ secrets.VITE_APP_NAME }} \
+              --build-arg VITE_ENV=production \
+              .
+
+            # Restart service (will use new image)
+            systemctl --user start virtual-scroll-app.service
+
+            # Clean up old images
+            podman image prune -f
+
+            echo "Deployment completed successfully!"
